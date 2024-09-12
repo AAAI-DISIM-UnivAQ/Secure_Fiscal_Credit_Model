@@ -1,0 +1,101 @@
+#pragma version 8
+intcblock 0 1
+bytecblock 0x
+txn NumAppArgs
+intc_0 // 0
+==
+bnz main_l4
+txna ApplicationArgs 0
+pushbytes 0xa2be722e // "update_state(string,string,string)string"
+==
+bnz main_l3
+err
+main_l3:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub updatestatecaster_2
+intc_1 // 1
+return
+main_l4:
+txn OnCompletion
+intc_0 // NoOp
+==
+bnz main_l8
+txn OnCompletion
+pushint 5 // DeleteApplication
+==
+bnz main_l7
+err
+main_l7:
+txn ApplicationID
+intc_0 // 0
+!=
+assert
+callsub delete_0
+intc_1 // 1
+return
+main_l8:
+txn ApplicationID
+intc_0 // 0
+==
+assert
+intc_1 // 1
+return
+
+// delete
+delete_0:
+proto 0 0
+txn Sender
+global CreatorAddress
+==
+// unauthorized
+assert
+intc_1 // 1
+return
+
+// update_state
+updatestate_1:
+proto 3 1
+bytec_0 // ""
+frame_dig -3
+extract 2 0
+frame_dig -1
+extract 2 0
+==
+bnz updatestate_1_l2
+pushbytes 0x000546616c7365 // 0x000546616c7365
+frame_bury 0
+b updatestate_1_l3
+updatestate_1_l2:
+pushbytes 0x000454727565 // 0x000454727565
+frame_bury 0
+updatestate_1_l3:
+retsub
+
+// update_state_caster
+updatestatecaster_2:
+proto 0 0
+bytec_0 // ""
+dupn 3
+txna ApplicationArgs 1
+frame_bury 1
+txna ApplicationArgs 2
+frame_bury 2
+txna ApplicationArgs 3
+frame_bury 3
+frame_dig 1
+frame_dig 2
+frame_dig 3
+callsub updatestate_1
+frame_bury 0
+pushbytes 0x151f7c75 // 0x151f7c75
+frame_dig 0
+concat
+log
+retsub

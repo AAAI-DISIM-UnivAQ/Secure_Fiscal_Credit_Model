@@ -1,0 +1,26 @@
+{
+    "name": "PaperworkAgent",
+    "methods": [
+        {
+            "name": "update_state",
+            "args": [
+                {
+                    "type": "string",
+                    "name": "actual"
+                },
+                {
+                    "type": "string",
+                    "name": "assevered"
+                },
+                {
+                    "type": "string",
+                    "name": "payed"
+                }
+            ],
+            "returns": {
+                "type": "string"
+            }
+        }
+    ],
+    "networks": {}
+}
